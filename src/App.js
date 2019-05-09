@@ -1,23 +1,30 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import NavBar from './components/layout/NavBar';
-import Home from './components/pages/Home';
-import Contact from './components/pages/Contact';
-import Register from './components/auth/Register';
+import Routes from './config/routes';
 import './App.css';
+import axios from 'axios';
 
-function App() {
+const App = ({ history }) => {
+  const [ currentUser, setCurrentUser ] = useState(localStorage.currentUser);
+
+  const handleLogout = async () => {
+    if (localStorage.currentUser && window.confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('currentUser');
+      const response = await axios.post(`${process.env.REACT_APP_API}/auth/logout`, { withCredentials: true });
+      console.log(response);
+      history.push('/login');
+    }
+  } 
+
   return (
-    <div>
-      <h1>Wayfarer</h1>
-      <NavBar />
-      <Switch>
-        <Route exact path='/' component={Home} />
-        <Route path='/contact' component={Contact} />
-        <Route path='/register' component={Register} />
-      </Switch>
-    </div>
+    <>
+      <NavBar currentUser={currentUser} logout={handleLogout} />
+      <main>
+        <Routes currentUser={currentUser} setCurrentUser={setCurrentUser} />
+      </main>
+    </>
   );
 }
 
-export default App;
+export default withRouter(App);

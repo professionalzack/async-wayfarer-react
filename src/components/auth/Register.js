@@ -11,33 +11,33 @@ const Register = () => {
     password2: ''
   });
 
-    const handleChange = e => {
-      setNewUser({
-        ...newUser,
-        [e.target.name]: e.target.value
-      });
-    };
+  const handleChange = e => {
+    setNewUser({
+      ...newUser,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    const handleSubmit = async e => {
-      e.preventDefault();
-      console.log(newUser);
+  const handleSubmit = async e => {
+    e.preventDefault();
+    console.log(newUser);
 
-      try {
-        const result = await axios.post('http://localhost:4000/api/v1/auth/register', newUser, {withCredentials: true});
-        console.log(result)
-      } catch(err) {
-        console.log(err);
-        setErrors(err.response.data.errors);
-      }
-
+    try {
+      const result = await axios.post('http://localhost:4000/api/v1/auth/register', newUser, {withCredentials: true});
+      console.log(result)
+    } catch(err) {
+      console.log(err);
+      setErrors(err.response.data.errors);
     }
 
-    const { name, email, password, password2, city } = newUser;
+  }
+
+  const { name, email, password, password2, city } = newUser;
 
   return (
     <>
-      { errors ? errors.map(error => `${error.message}. `) : null }
       <section className="form">
+        { errors ? errors.map(error => `${error.message}. `) : null }
         <h1>Register</h1>
         <form onSubmit={handleSubmit}>
           <input type="text" name="name" value={name} placeholder="Name" onChange={handleChange} />
